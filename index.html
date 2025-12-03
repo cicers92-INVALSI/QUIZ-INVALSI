@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulazione Prova di Italiano</title>
+    <title>Simulazione Prova di Italiano - Prova 2</title>
     
     <style>
+        /* Contenitore Principale */
         .quiz-container { max-width: 850px; margin: 20px auto; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); font-family: Arial, sans-serif !important; }
-        .quiz-container h1 { text-align: center; color: #dc3545; border-bottom: 3px solid #dc3545; padding-bottom: 12px; margin-bottom: 30px; font-size: 1.8em !important; }
+        .quiz-container h1 { text-align: center; color: #007bff; border-bottom: 3px solid #007bff; padding-bottom: 12px; margin-bottom: 30px; font-size: 1.8em !important; }
         .quiz-container h2 { color: #333; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-top: 40px; font-size: 1.5em !important; }
-        .testo-lettura { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; background-color: #fce4e4; border-radius: 6px; font-style: italic; line-height: 1.4; }
-        .domanda-blocco { margin-bottom: 30px; padding: 15px; border-left: 5px solid #dc3545; background-color: #f9f9f9; border-radius: 6px; }
-        .domanda-blocco h3 { margin-top: 0; color: #dc3545; font-size: 1.1em !important; }
+        .testo-lettura { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; background-color: #e6f7ff; border-radius: 6px; font-style: italic; line-height: 1.5; }
+        .domanda-blocco { margin-bottom: 30px; padding: 15px; border-left: 5px solid #007bff; background-color: #f9f9f9; border-radius: 6px; }
+        .domanda-blocco h3 { margin-top: 0; color: #007bff; font-size: 1.1em !important; }
         .opzione-risposta { margin: 8px 0; padding: 12px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; transition: background-color 0.3s; display: block; }
         .opzione-risposta:hover { background-color: #e9e9e9; }
         
@@ -21,421 +22,481 @@
             margin-bottom: 20px; 
             font-size: 1.5em !important; 
             font-weight: bold; 
-            color: #dc3545;
+            color: #007bff;
             padding: 10px;
-            border: 2px solid #dc3545;
+            border: 2px solid #007bff;
             border-radius: 5px;
-            background-color: #fce4e4;
+            background-color: #e6f7ff;
         }
         
         /* Stili per la correzione */
         .corretta { background-color: #d4edda !important; border-color: #c3e6cb !important; font-weight: bold; }
         .sbagliata { background-color: #f8d7da !important; border-color: #f5c6cb !important; }
-        .risultato { margin-top: 30px; padding: 25px; border: 2px solid #dc3545; background-color: #fff0f0; border-radius: 8px; text-align: center; }
+        .risultato { margin-top: 30px; padding: 25px; border: 2px solid #007bff; background-color: #f0f8ff; border-radius: 8px; text-align: center; }
         .motivazione { margin-top: 8px; font-size: 0.85em; color: #555; border-top: 1px dotted #ccc; padding-top: 5px; font-style: normal; text-align: left; }
-        .bottone { display: block; width: 100%; padding: 15px; background-color: #dc3545; color: white; border: none; border-radius: 5px; font-size: 1.2em; cursor: pointer; margin-top: 30px; transition: background-color 0.3s; }
-        .bottone:hover { background-color: #c82333; }
+        
+        /* Bottoni e Input */
+        .bottone { 
+            display: block; width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; 
+            border-radius: 5px; font-size: 1.2em; cursor: pointer; margin-top: 30px; transition: background-color 0.3s; 
+        }
+        .bottone:hover { background-color: #0056b3; }
+        
+        /* Stile specifico per il tasto Invio finale */
+        #submit-button { 
+            background-color: #28a745; /* Verde */
+            display: none; /* Nascosto finché non si calcola il risultato */
+        }
+        #submit-button:hover {
+            background-color: #1e7e34;
+        }
+
+        /* Schermata Iniziale */
+        #start-screen {
+            text-align: center;
+            padding: 50px 20px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background-color: #f8fafd;
+        }
+        #start-screen h2 {
+            font-size: 2em !important;
+            color: #007bff;
+            border: none;
+            margin-bottom: 20px;
+        }
+        #start-screen p {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        .input-identificazione {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 90%;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
     
     <div class="quiz-container">
-        <h1>Simulazione Prova di Italiano - Livello Base/Intermedio (Prova 1)</h1>
+        <h1>Simulazione Prova di Italiano - Livello Intermedio/Avanzato (Prova 2)</h1>
         
-        <div id="timer-display">
-            Tempo Rimanente: 30:00
+        <div id="start-screen">
+            <h2>Pronto per la Prova 2?</h2>
+            <p>La prova ha una durata di 30 minuti e consiste in 15 domande. **Il tempo inizierà a scorrere non appena farai clic sul pulsante qui sotto.**</p>
+            <button id="start-button" class="bottone" style="width: auto; padding: 15px 40px;">INIZIA PROVA</button>
         </div>
-        
-        <p>La prova consiste in 15 domande di comprensione e analisi linguistica.</p>
-        
-        <form id="invalsi-quiz">
+
+        <div id="quiz-content" style="display: none;">
             
-            <h2>Testo A: Narrativo (1-5)</h2>
-            <div class="sezione-testo">
-                <div class="testo-lettura">
-                    <p>
-                        **Il vecchio faro si ergeva sulla scogliera come un dito puntato verso il cielo tempestoso.**
-                        Luca, seduto sul muretto, osservava la nave che lottava contro le onde, una battaglia muta e solitaria. Il vento gli sferzava il volto, portando con sé il sapore salmastro del mare. Era arrivato lì in cerca di silenzio, ma il mare parlava una lingua troppo forte, una lingua che gli ricordava la sua stessa inquietudine.
-                        Si sentiva fragile quanto l'imbarcazione laggiù, destinato a navigare senza meta precisa.
-                    </p>
+            <div id="timer-display">
+                Tempo Rimanente: 30:00
+            </div>
+            
+            <p>La prova consiste in 15 domande di comprensione testuale avanzata e analisi del periodo.</p>
+            
+            <form id="invalsi-quiz" method="POST" action="https://formspree.io/f/mnnevyll">
+
+                <h2 style="margin-top: 10px; border-bottom: none;">Identificazione</h2>
+                <input type="email" name="_replyto" id="user-email" class="input-identificazione" placeholder="Inserisci la tua Email per l'identificazione (Obbligatorio)" required>
+                
+                <h2>Testo A: Saggistico (1-5)</h2>
+                <div class="sezione-testo">
+                    <div class="testo-lettura">
+                        <p>
+                            **L'epistemologia moderna, pur riconoscendo l'importanza del dato empirico, non può esimersi dall'interrogarsi sulla natura della conoscenza stessa.**
+                            La crisi dei fondamenti nel pensiero scientifico post-strutturalista ha disvelato l'ineludibile legame tra l'osservatore e l'osservato, minando l'illusione di una neutralità oggettiva. Tale consapevolezza impone una rivisitazione critica dei paradigmi di validazione, spostando l'asse della ricerca dalla mera descrizione fenomenica alla comprensione ermeneutica del processo cognitivo. In tal senso, la verità si configura non più come corrispondenza assoluta, ma come coerenza intersoggettiva.
+                        </p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="1">
-                <h3>Q1. Cosa suggerisce il paragone "Si sentiva fragile quanto l'imbarcazione"?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q1" value="0">
-                    Il bisogno di riparare la nave.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q1" value="1">
-                    La fragilità dell'esistenza di Luca.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q1" value="2">
-                    Il pericolo imminente di un naufragio.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q1" value="3">
-                    Il desiderio di Luca di viaggiare.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="2">
-                <h3>Q2. Che figura retorica è usata in "come un dito puntato verso il cielo tempestoso"?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q2" value="0">
-                    Similitudine.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q2" value="1">
-                    Metafora.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q2" value="2">
-                    Iperbole.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q2" value="3">
-                    Allitterazione.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="3">
-                <h3>Q3. Qual è l'effetto del mare su Luca?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q3" value="0">
-                    Gli dona la tranquillità cercata.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q3" value="1">
-                    Lo distrae dai suoi pensieri.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q3" value="2">
-                    Amplifica il suo stato d'animo inquieto.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q3" value="3">
-                    Lo fa sentire sicuro e protetto.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="4">
-                <h3>Q4. Nell'espressione "la nave che lottava contro le onde", la parola "che" svolge la funzione di:</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q4" value="0">
-                    Congiunzione.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q4" value="1">
-                    Pronome relativo soggetto.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q4" value="2">
-                    Pronome relativo complemento oggetto.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q4" value="3">
-                    Pronome dimostrativo.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="5">
-                <h3>Q5. Il verbo "sferzava" significa:</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q5" value="0">
-                    Accarezzare dolcemente.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q5" value="1">
-                    Coprire o avvolgere.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q5" value="2">
-                    Colpire con violenza.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q5" value="3">
-                    Allontanare.
-                </label>
-            </div>
-            
-            <h2>Testo B: Espositivo (6-10)</h2>
-            <div class="sezione-testo">
-                <div class="testo-lettura">
-                    <p>
-                        La Rivoluzione Industriale non è stata solo una trasformazione tecnologica, ma un fenomeno che ha trasformato radicalmente non solo i metodi di produzione ma anche la struttura sociale. L'introduzione delle macchine, in particolare della macchina a vapore, ha accelerato i trasporti e la produzione su larga scala. Tuttavia, questo progresso ha portato con sé l'alienazione del lavoratore e la nascita di un nuovo sistema economico, sintomo di una profonda disattenzione al fattore umano, che ha generato il fenomeno del proletariato urbano.
-                    </p>
+                
+                <div class="domanda-blocco" data-numero="1">
+                    <h3>Q1. Qual è la principale implicazione della "crisi dei fondamenti" menzionata nel testo?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q1" value="0">
+                        La conoscenza empirica è ormai superata.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q1" value="1">
+                        L'impossibilità di raggiungere la verità.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q1" value="2">
+                        L'osservatore influenza inevitabilmente l'oggetto osservato.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q1" value="3">
+                        Il primato del dato quantitativo su quello qualitativo.
+                    </label>
                 </div>
-            </div>
+                
+                <div class="domanda-blocco" data-numero="2">
+                    <h3>Q2. Qual è il significato del termine "ermeneutica" nel contesto del testo?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q2" value="0">
+                        Descrizione analitica dei fenomeni.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q2" value="1">
+                        Studio delle leggi scientifiche.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q2" value="2">
+                        Interpretazione e comprensione profonda.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q2" value="3">
+                        Raccolta di dati statistici.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="3">
+                    <h3>Q3. La "verità" in questo contesto si configura come:</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q3" value="0">
+                        Corrispondenza assoluta con la realtà.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q3" value="1">
+                        Risultato di un esperimento empirico.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q3" value="2">
+                        Coerenza logica condivisa tra soggetti.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q3" value="3">
+                        Mera descrizione fenomenica.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="4">
+                    <h3>Q4. L'espressione "si configura" è un verbo coniugato al:</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q4" value="0">
+                        Congiuntivo presente, forma passiva.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q4" value="1">
+                        Indicativo presente, forma riflessiva.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q4" value="2">
+                        Condizionale presente, forma impersonale.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q4" value="3">
+                        Gerundio, forma passiva.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="5">
+                    <h3>Q5. La proposizione "pur riconoscendo l'importanza del dato empirico" è una proposizione:</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q5" value="0">
+                        Temporale implicita.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q5" value="1">
+                        Causale implicita.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q5" value="2">
+                        Concessiva implicita.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q5" value="3">
+                        Finale implicita.
+                    </label>
+                </div>
+                
+                <h2>Testo B: Letterario (6-10)</h2>
+                <div class="sezione-testo">
+                    <div class="testo-lettura">
+                        <p>
+                            Nel meriggio caliginoso, il palazzo sorgeva come un monolite dimenticato, le cui finestre cieche non riflettevano che l'opacità del cielo. Ero lì, l'ultima sentinella di un'era in disfacimento. Ogni passo risuonava sulle lastre del cortile con una solennità eccessiva, quasi che l'eco volesse ammonire l'aria circostante della mia inopportuna presenza. La ruggine aveva colonizzato i cancelli, effigiando sulle volute di ferro una decadenza tanto lenta quanto inesorabile.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="6">
+                    <h3>Q6. Quale tono prevale nel Testo B?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q6" value="0">
+                        Leggero e umoristico.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q6" value="1">
+                        Drammatico e polemico.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q6" value="2">
+                        Malinconico e solenne.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q6" value="3">
+                        Descrittivo e neutrale.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="7">
+                    <h3>Q7. Cosa implica la metafora "ultima sentinella di un'era in disfacimento"?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q7" value="0">
+                        Il narratore è un custode del palazzo.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q7" value="1">
+                        È l'unico testimone della fine di un'epoca.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q7" value="2">
+                        Ha il compito di proteggere il palazzo.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q7" value="3">
+                        Il palazzo è una fortezza militare.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="8">
+                    <h3>Q8. Che funzione ha la frase "quasi che l'eco volesse ammonire l'aria"?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q8" value="0">
+                        Introduce un paragone esplicito.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q8" value="1">
+                        Esprime un desiderio del narratore.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q8" value="2">
+                        Sottolinea la percezione di inadeguatezza del narratore.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q8" value="3">
+                        Descrive l'acustica del luogo.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="9">
+                    <h3>Q9. Trova il sinonimo più adatto di "caliginoso" nel contesto.</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q9" value="0">
+                        Luminoso.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q9" value="1">
+                        Ventoso.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q9" value="2">
+                        Torrido.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q9" value="3">
+                        Nebuloso, fosco.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="10">
+                    <h3>Q10. Nella frase "la ruggine aveva colonizzato i cancelli", "colonizzato" è un esempio di:</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q10" value="0">
+                        Iperbole.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q10" value="1">
+                        Ossimoro.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q10" value="2">
+                        Personificazione.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q10" value="3">
+                        Litote.
+                    </label>
+                </div>
+                
+                <h2>Analisi del Periodo (11-15)</h2>
+                
+                <div class="domanda-blocco" data-numero="11">
+                    <h3>Q11. Nella frase "Ti chiedo di dirmi chi sia l'autore che ha scritto l'articolo.", qual è la proposizione principale?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q11" value="0">
+                        Ti chiedo.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q11" value="1">
+                        Di dirmi.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q11" value="2">
+                        Chi sia l'autore.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q11" value="3">
+                        Che ha scritto l'articolo.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="12">
+                    <h3>Q12. "Benchè fosse stanco, decise di proseguire il lavoro affinché il progetto fosse consegnato in tempo." Quale proposizione è subordinata finale?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q12" value="0">
+                        Benchè fosse stanco.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q12" value="1">
+                        Decise di proseguire il lavoro.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q12" value="2">
+                        Affinché il progetto fosse consegnato in tempo.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q12" value="3">
+                        Il lavoro.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="13">
+                    <h3>Q13. In "Dopo aver letto il rapporto, ho tratto conclusioni definitive", la subordinata implicita è:</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q13" value="0">
+                        Finale.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q13" value="1">
+                        Temporale.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q13" value="2">
+                        Modale.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q13" value="3">
+                        Causale.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="14">
+                    <h3>Q14. Quale delle seguenti frasi contiene una proposizione subordinata dichiarativa?</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q14" value="0">
+                        Credo che tu abbia ragione.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q14" value="1">
+                        Ho la certezza che domani pioverà.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q14" value="2">
+                        Dimmi dove sei andato.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q14" value="3">
+                        La casa in cui vivo è vecchia.
+                    </label>
+                </div>
+                
+                <div class="domanda-blocco" data-numero="15">
+                    <h3>Q15. Trasforma in forma attiva: "L'articolo fu letto da molti studenti."</h3>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q15" value="0">
+                        Molti studenti hanno letto l'articolo.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q15" value="1">
+                        L'articolo che è stato letto da molti studenti.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q15" value="2">
+                        Molti studenti lessero l'articolo.
+                    </label>
+                    <label class="opzione-risposta">
+                        <input type="radio" name="q15" value="3">
+                        L'articolo fu dai molti studenti letto.
+                    </label>
+                </div>
+                
+                <button type="button" class="bottone" id="calcola-risultato">Calcola Punteggio e Visualizza Feedback</button>
+
+                <button type="submit" class="bottone" id="submit-button">INVIA RISULTATI AL DOCENTE</button>
+            </form>
             
-            <div class="domanda-blocco" data-numero="6">
-                <h3>Q6. Qual è la duplice conseguenza della Rivoluzione Industriale secondo il testo?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q6" value="0">
-                    Solo la trasformazione tecnologica.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q6" value="1">
-                    Trasformazione dei metodi di produzione e della struttura sociale.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q6" value="2">
-                    Solo l'introduzione delle macchine.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q6" value="3">
-                    Cambiamento climatico e inquinamento.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="7">
-                <h3>Q7. L'introduzione della macchina a vapore ha principalmente:</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q7" value="0">
-                    Rallentato la produzione artigianale.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q7" value="1">
-                    Eliminato la schiavitù.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q7" value="2">
-                    Accelerato trasporti e produzione.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q7" value="3">
-                    Aumentato l'emigrazione verso le campagne.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="8">
-                <h3>Q8. Nella frase "...sistema economico, sintomo di una profonda disattenzione...", la parola "sintomo" svolge funzione di:</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q8" value="0">
-                    Complemento oggetto.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q8" value="1">
-                    Apposizione.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q8" value="2">
-                    Aggettivo qualificativo.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q8" value="3">
-                    Complemento di specificazione.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="9">
-                <h3>Q9. Cosa si intende per "profonda disattenzione al fattore umano"?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q9" value="0">
-                    C'era troppa attenzione alle esigenze dei datori di lavoro.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q9" value="1">
-                    I macchinari erano pericolosi.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q9" value="2">
-                    Il sistema economico non teneva conto dei bisogni e dei diritti dei lavoratori.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q9" value="3">
-                    I lavoratori non erano qualificati.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="10">
-                <h3>Q10. Quale classe sociale viene menzionata come risultato di questa trasformazione?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q10" value="0">
-                    L'aristocrazia.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q10" value="1">
-                    La borghesia rurale.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q10" value="2">
-                    Il proletariato urbano.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q10" value="3">
-                    La classe media.
-                </label>
-            </div>
-            
-            <h2>Analisi Linguistica e Ristrutturazione (11-15)</h2>
-            
-            <div class="domanda-blocco" data-numero="11">
-                <h3>Q11. Se un saggio si apre con "L'inevitabile progresso del settore IT ha ridefinito il modo in cui lavoriamo", qual è la tesi principale?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q11" value="0">
-                    La tecnologia non ha avuto un impatto significativo.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q11" value="1">
-                    Il progresso IT ha avuto un impatto positivo sul lavoro.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q11" value="2">
-                    L'IT ha solo complicato i metodi di lavoro.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q11" value="3">
-                    Il settore IT è in declino.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="12">
-                <h3>Q12. Quale tra i seguenti NON è un argomento a favore dell'uso dell'intelligenza artificiale (IA) in azienda?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q12" value="0">
-                    Automazione dei processi ripetitivi.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q12" value="1">
-                    Aggiornamenti in tempo reale e riduzione dei costi.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q12" value="2">
-                    Difficoltà nell'interpretazione dei dati complessi.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q12" value="3">
-                    Miglioramento dell'analisi predittiva.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="13">
-                <h3>Q13. Quale congiunzione introduce l'antitesi in un testo argomentativo?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q13" value="0">
-                    Perciò.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q13" value="1">
-                    Inoltre.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q13" value="2">
-                    Tuttavia.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q13" value="3">
-                    Poiché.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="14">
-                <h3>Q14. Nella frase: "Leggendo quel saggio, si è informato a fondo sulla storia, rendendo la sua preparazione completa", la proposizione al gerundio ha funzione:</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q14" value="0">
-                    Temporale.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q14" value="1">
-                    Causale.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q14" value="2">
-                    Modale/Strumentale.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q14" value="3">
-                    Concessiva.
-                </label>
-            </div>
-            
-            <div class="domanda-blocco" data-numero="15">
-                <h3>Q15. Qual è il sinonimo di "progresso" nel contesto scientifico?</h3>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q15" value="0">
-                    Regressione.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q15" value="1">
-                    Stasi.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q15" value="2">
-                    Avanzamento.
-                </label>
-                <label class="opzione-risposta">
-                    <input type="radio" name="q15" value="3">
-                    Stallo.
-                </label>
-            </div>
-            
-            <button type="submit" class="bottone">Controlla le Risposte e Ottieni il Punteggio Totale</button>
-        </form>
-        
-        <div id="risultato-quiz" class="risultato" style="display: none;"></div>
+            <div id="risultato-quiz" class="risultato" style="display: none;"></div>
+        </div>
     </div>
     
     <script>
         // DURATA DEL QUIZ IN SECONDI (30 minuti = 1800 secondi)
         const DURATA_SECONDI = 1800; 
         let tempoRimanente = DURATA_SECONDI;
+        let tempoInizio = null; // Memorizza il timestamp di inizio
+        let tempoTotaleImpiegato = 0; // Memorizza il tempo finale in secondi
+
         let timerInterval;
 
-        // DEFINIZIONE DELLE RISPOSTE CORRETTE (l'indice va da 0 a 3 per le 4 opzioni)
+        // DEFINIZIONE DELLE RISPOSTE CORRETTE PER PROVA 2 (l'indice va da 0 a 3 per le 4 opzioni)
         const risposteCorrette = {
-            // Indice 1 (seconda opzione) è la risposta corretta
-            q1: { index: 1, motivazione: "La fragilità dell'imbarcazione rispecchia l'inquietudine di Luca, che vede la sua vita come 'fragile quanto l'imbarcazione'." },
+            // Testo A: Saggistico
+            q1: { index: 2, motivazione: "La crisi dei fondamenti ha 'disvelato l'ineludibile legame tra l'osservatore e l'osservato', minando la neutralità oggettiva." },
+            q2: { index: 2, motivazione: "Ermeneutica significa teoria dell'interpretazione e della comprensione profonda di un testo o un'espressione." },
+            q3: { index: 2, motivazione: "La verità è configurata come 'coerenza intersoggettiva', non più come corrispondenza assoluta." },
+            q4: { index: 1, motivazione: "Il verbo è all'indicativo presente ('si configura') e la particella 'si' indica la forma riflessiva (o riflessiva apparente)." },
+            q5: { index: 2, motivazione: "Introdotta da 'pur' + gerundio, esprime una concessione (nonostante riconosca), tipica della proposizione concessiva implicita." },
             
-            // Indice 0 (prima opzione) è la risposta corretta
-            q2: { index: 0, motivazione: "La presenza di 'come' introduce un paragone esplicito, tipico della Similitudine." },
+            // Testo B: Letterario
+            q6: { index: 2, motivazione: "Il riferimento a 'monolite dimenticato', 'solennità eccessiva' e 'decadenza' stabilisce un tono malinconico e solenne." },
+            q7: { index: 1, motivazione: "L'espressione suggerisce che il narratore è l'unico rimasto a osservare il disfacimento di un'epoca passata o un sistema di valori." },
+            q8: { index: 2, motivazione: "L'eco 'ammonisce' della sua 'inopportuna presenza', riflettendo il senso di estraneità e inadeguatezza del narratore." },
+            q9: { index: 3, motivazione: "Caliginoso significa 'coperto di caligine, nebbioso, fosco', e si adatta bene al 'cielo opaco'." },
+            q10: { index: 2, motivazione: "Il verbo 'colonizzare', usato per la ruggine, attribuisce un'azione tipicamente umana a un oggetto inanimato (Personificazione)." },
             
-            // Indice 2 (terza opzione) è la risposta corretta
-            q3: { index: 2, motivazione: "Il mare, parlando 'una lingua troppo forte', gli ricorda 'la sua stessa inquietudine', amplificandola invece di zittirla." },
-            
-            // Indice 1 (seconda opzione) è la risposta corretta
-            q4: { index: 1, motivazione: "Il 'che' sostituisce il nome 'nave' e svolge la funzione di soggetto del verbo 'lottava'." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q5: { index: 2, motivazione: "Sferzare significa colpire con violenza, in modo figurato per descrivere l'azione forte del vento." },
-            
-            // Indice 1 (seconda opzione) è la risposta corretta
-            q6: { index: 1, motivazione: "Il testo afferma: 'ha trasformato radicalmente non solo i metodi di produzione ma anche la struttura sociale'." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q7: { index: 2, motivazione: "Il testo specifica: 'ha accelerato i trasporti e la produzione'." },
-            
-            // Indice 1 (seconda opzione) è la risposta corretta
-            q8: { index: 1, motivazione: "Il sostantivo 'sintomo' (assenza di diritti) è un nome che qualifica il sistema economico, funzionando da Apposizione." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q9: { index: 2, motivazione: "Il sistema economico non teneva conto dei bisogni e dei diritti dei lavoratori (disattento al fattore umano)." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q10: { index: 2, motivazione: "Il proletariato è la classe lavoratrice che vive nelle città e dipende dal salario." },
-            
-            // Indice 1 (seconda opzione) è la risposta corretta
-            q11: { index: 1, motivazione: "La tesi è introdotta come 'inevitabile progresso' e confermata nella conclusione come 'scelta necessaria'." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q12: { index: 2, motivazione: "Difficoltà nell'interpretazione dei dati complessi è un argomento CONTRO l'IA, mentre gli altri sono a favore." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q13: { index: 2, motivazione: "L'avversativa 'Tuttavia' introduce l'opinione contraria (antitesi)." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q14: { index: 2, motivazione: "La proposizione implicita al gerundio ('rendendo') ha funzione modale/strumentale." },
-            
-            // Indice 2 (terza opzione) è la risposta corretta
-            q15: { index: 2, motivazione: "Progresso indica un avanzamento o un miglioramento (sinonimo: avanzamento)." }
+            // Analisi del Periodo
+            q11: { index: 0, motivazione: "La proposizione principale è quella che non dipende da nessun'altra: 'Ti chiedo'." },
+            q12: { index: 2, motivazione: "La congiunzione 'affinché' introduce sempre una proposizione subordinata finale (scopo)." },
+            q13: { index: 1, motivazione: "Introdotta da 'dopo aver' + participio passato, indica il momento in cui avviene l'azione (temporale)." },
+            q14: { index: 1, motivazione: "La dichiarativa 'che domani pioverà' chiarisce il nome 'certezza' nella reggente, tipico della funzione dichiarativa." },
+            q15: { index: 2, motivazione: "La forma attiva del passato remoto ('fu letto') richiede la forma attiva al passato remoto ('lessero')." }
         };
+
+        // Funzione per convertire i secondi in formato M:SS
+        function formattaTempo(secondi) {
+            const min = Math.floor(secondi / 60);
+            const sec = secondi % 60;
+            return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+        
+        // Funzione per avviare il timer e mostrare il quiz
+        function iniziaQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-content').style.display = 'block';
+            tempoInizio = Date.now(); // Registra il momento di inizio
+            timerInterval = setInterval(aggiornaTimer, 1000);
+        }
 
         // --- FUNZIONE PRINCIPALE DI CORREZIONE ---
         function correggiQuiz(event) {
-            if (event) event.preventDefault(); 
+            if (event) event.preventDefault(); // Impedisce l'invio immediato del form
             clearInterval(timerInterval); 
+
+            // Calcola il tempo impiegato
+            const tempoFine = Date.now();
+            if (tempoInizio) {
+                const tempoTrascorsoMs = tempoFine - tempoInizio;
+                tempoTotaleImpiegato = Math.round(tempoTrascorsoMs / 1000); // tempo in secondi
+            } else {
+                // Caso limite in cui il tempo non è stato registrato (es. debug)
+                tempoTotaleImpiegato = DURATA_SECONDI - tempoRimanente; 
+            }
+
             let punteggio = 0;
             const totalDomande = 15;
             const form = document.getElementById('invalsi-quiz'); 
@@ -445,19 +506,24 @@
             const radioInputs = form.querySelectorAll('input[type="radio"]');
             radioInputs.forEach(input => { input.disabled = true; });
             
-            const bottoneControllo = form.querySelector('.bottone');
-            if (bottoneControllo) bottoneControllo.style.display = 'none';
+            const bottoneCalcola = document.getElementById('calcola-risultato');
+            const bottoneSubmit = document.getElementById('submit-button');
+
+            if (bottoneCalcola) bottoneCalcola.style.display = 'none';
+            
+            // Variabile per il riepilogo delle risposte (per l'invio)
+            const riepilogoRisposte = [];
 
             for (let i = 1; i <= totalDomande; i++) {
                 const nomeDomanda = `q${i}`;
                 const elementoDomanda = form.elements[nomeDomanda];
                 if (!elementoDomanda) continue; 
                 
-                let rispostaUtente = -1; // Usiamo -1 per indicare nessuna risposta
+                let rispostaUtente = -1; 
                 const risposte = document.getElementsByName(nomeDomanda);
                 for(let j = 0; j < risposte.length; j++) {
                     if(risposte[j].checked) {
-                        rispostaUtente = parseInt(risposte[j].value); // Ottieni l'indice (0, 1, 2, 3)
+                        rispostaUtente = parseInt(risposte[j].value); 
                         break;
                     }
                 }
@@ -475,38 +541,72 @@
                 const indiceCorretto = corretta.index;
                 const motivazione = corretta.motivazione;
                 const opzioneCorretta = opzioni[indiceCorretto];
+                let statoRisposta = "Non Risposto";
+
 
                 if (rispostaUtente !== -1) {
-                    // Controlla se la risposta data dall'utente corrisponde all'indice (0-based) corretto
                     if (rispostaUtente === indiceCorretto) {
                         punteggio++;
                         opzioni[rispostaUtente].classList.add('corretta');
+                        statoRisposta = "Corretto";
                     } else {
-                        // Risposta sbagliata: evidenzia l'errore dell'utente e mostra la corretta
                         opzioni[rispostaUtente].classList.add('sbagliata');
                         opzioneCorretta.classList.add('corretta');
+                        statoRisposta = "Errato";
                     }
                 } else {
-                     // Nessuna risposta data, mostra solo la corretta
                      opzioneCorretta.classList.add('corretta');
                 }
 
+                // Aggiunge la motivazione visuale
                 const motivazioneElemento = document.createElement('div');
                 motivazioneElemento.classList.add('motivazione');
                 motivazioneElemento.innerHTML = `<strong>Risposta Corretta:</strong> ${motivazione}`;
                 opzioneCorretta.appendChild(motivazioneElemento);
+                
+                // Aggiunge il riepilogo per l'invio
+                riepilogoRisposte.push(`Q${i}: ${statoRisposta}`);
             }
 
             const punteggioPercentuale = ((punteggio / totalDomande) * 100).toFixed(2);
             
+            // --- INSERIMENTO DEI CAMPI NASCOSTI PER L'INVIO AUTOMATICO ---
+            
+            // Rimuovi vecchi campi nascosti se esistono
+            ['Punteggio_Totale', 'Percentuale_Corretta', 'Tempo_Impiegato', 'Riepilogo_Dettagliato', '_subject'].forEach(fieldName => {
+                const oldInput = form.querySelector(`input[name="${fieldName}"]`);
+                if (oldInput) oldInput.remove();
+            });
+
+            // Funzione per creare e appendere campi nascosti
+            const creaCampoNascosto = (name, value) => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            };
+
+            // Crea i dati essenziali
+            creaCampoNascosto('Punteggio_Totale', `${punteggio}/${totalDomande}`);
+            creaCampoNascosto('Percentuale_Corretta', `${punteggioPercentuale}%`);
+            creaCampoNascosto('Tempo_Impiegato', formattaTempo(tempoTotaleImpiegato));
+            creaCampoNascosto('_subject', `Risultato Prova 2: ${punteggio}/${totalDomande}`);
+            creaCampoNascosto('Riepilogo_Dettagliato', riepilogoRisposte.join('; ')); // Inviamo il dettaglio delle risposte
+
+            // Visualizzazione dei risultati
             risultatiDiv.style.display = 'block';
             risultatiDiv.innerHTML = `
-                <h2>Risultato Prova 1</h2>
-                <p style="font-size: 1.2em; font-weight: bold; color: #dc3545;">Hai totalizzato <strong>${punteggio}</strong> risposte corrette su ${totalDomande} totali.</p>
+                <h2>Risultato Prova 2</h2>
+                <p style="font-size: 1.2em; font-weight: bold; color: #007bff;">Hai totalizzato <strong>${punteggio}</strong> risposte corrette su ${totalDomande} totali.</p>
                 <p style="font-size: 1.5em; font-weight: bold;">Percentuale: ${punteggioPercentuale}%</p>
-                <p style="margin-top: 20px; font-size: 0.9em;">**Verifica ora le singole domande:** Le risposte evidenziate in <span style="color: #155724; font-weight: bold;">verde</span> sono quelle corrette (con motivazione). Le risposte da te selezionate evidenziate in <span style="color: #721c24; font-weight: bold;">rosso</span> sono sbagliate.</p>
+                <p style="font-size: 1.1em; color: #333;">Tempo Totale Impiegato: <strong>${formattaTempo(tempoTotaleImpiegato)}</strong></p>
+                <p style="margin-top: 20px; font-size: 0.9em;">**Verifica il feedback qui sopra:** I risultati sono stati calcolati. Per inviare il punteggio al docente, clicca sul bottone verde qui sotto.</p>
             `;
             
+            // Mostra il bottone di invio Formspree
+            if (bottoneSubmit) bottoneSubmit.style.display = 'block';
+
             risultatiDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -517,7 +617,8 @@
             if (tempoRimanente <= 0) {
                 clearInterval(timerInterval);
                 if (display) display.innerHTML = "Tempo Scaduto!";
-                correggiQuiz(); 
+                // Esegue il calcolo, disabilita tutto e mostra il bottone di invio
+                correggiQuiz(null); 
                 return;
             }
 
@@ -532,10 +633,10 @@
             tempoRimanente--;
         }
 
-        // Avvia il timer e assegna la funzione di correzione all'invio del form
+        // Avvia i listener per i bottoni di Start e Calcolo
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('invalsi-quiz').addEventListener('submit', correggiQuiz); 
-            timerInterval = setInterval(aggiornaTimer, 1000);
+            document.getElementById('calcola-risultato').addEventListener('click', correggiQuiz); 
+            document.getElementById('start-button').addEventListener('click', iniziaQuiz);
         });
     </script>
 </body>
